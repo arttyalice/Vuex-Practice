@@ -1,17 +1,48 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Gender</th>
+        <th>Age</th>
+      </tr>
+      <tr v-for="usr in users" :key="usr.id" @click="fetchUserInfo(usr.id)">
+        <td>{{ usr.id }}</td>
+        <td>{{ usr.name }}</td>
+        <td>{{ usr.gender }}</td>
+        <td>{{ usr.age }}</td>
+        <td><button @click="fetchUserInfo(usr.id)">get info</button></td>
+      </tr>
+    </table>
+
+    <hr/>
+    <div>ID: {{ userInfo.id }}</div>
+    <div>Name: {{ userInfo.name }}</div>
+    <div>Gender: {{ userInfo.gender }}</div>
+    <div>Age: {{ userInfo.age }}</div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'app',
-  components: {
-    HelloWorld
+  computed: {
+    ...mapGetters({
+      users: 'users/getUsers',
+      userInfo: 'users/getUserInfo'
+    })
+  },
+  async mounted () {
+    await this.fetchUsers()
+  },
+  methods: {
+    ...mapActions({
+      fetchUsers: 'users/fetchUsers',
+      fetchUserInfo: 'users/fetchUserInfo'
+    })
   }
 }
 </script>
